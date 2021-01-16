@@ -59,8 +59,7 @@ namespace LinkedListExample.Lib
                 _head.Remove(v);                    // start checking from the 1st value => head
         }                                           // 1st value can infer the values after
 
-        public bool Delete(int v)
-        {
+        public bool Delete(int v)   {
             if (_head == null)
                 return false;
             else
@@ -69,19 +68,36 @@ namespace LinkedListExample.Lib
 
         // to string
 
-        public override string ToString()
-        {
+        public override string ToString()   {
             string ListValueString = "{";
             IntegerNode NodeNow = _head;
-            while (NodeNow != null)         // when it's not the last one
+            while (NodeNow != null)                 // when it's not the last one
             {
-                ListValueString += NodeNow.ToString() + ";";           // conversion & format
-                NodeNow = NodeNow.Next;
+                ListValueString += NodeNow.ToString() + ";";    // conversion & format
+                NodeNow = NodeNow.Next;                         // Next: return _next
             }
             ListValueString = ListValueString.Substring(0, ListValueString.Length - 1) + "}";
             return ListValueString;
         }
 
+        
+        public string RemoveDup()   {
+            IntegerNode CurrentOne = _head;
+            IntegerNode CompareNode = _head;
+            int ComparedValue = CompareNode.GetValue;
+            
+            while (CurrentOne.GetValue != ComparedValue)  {
+                while (CurrentOne.GetValue != ComparedValue)
+                {
+                    CurrentOne = CurrentOne.Next;
+                }
+                CompareNode = CompareNode.Next;
+
+                if (CurrentOne.GetValue == ComparedValue)
+                    CurrentOne.Delete(CurrentOne.GetValue);     // Q: should I use CurrentOne.Delete / _head.Delete?
+            }
+            return ("Duplicates Removed");
+        }
     }
 
     public class IntegerNode
@@ -97,6 +113,11 @@ namespace LinkedListExample.Lib
         /// <summary>
         /// Recursion: until pointing at nothing (End of the LinkedList inputting)
         /// </summary>
+
+        public int GetValue
+        {
+            get { return _value; }
+        }
 
         public int Count    {                                       // PROPERTY: get; set
             get {

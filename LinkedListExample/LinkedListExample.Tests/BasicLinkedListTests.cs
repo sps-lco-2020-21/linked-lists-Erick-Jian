@@ -25,8 +25,9 @@ namespace LinkedListExample.Tests
             var ill = new IntegerLinkedList(5);     // declare a variable type as linked list
             ill.Append(7);
             ill.Append(9);
-            ill.Remove(9);                          //
-            Assert.AreEqual(21, ill.Sum);
+            ill.Remove(9);
+            ill.Delete(7);                          // Boolean Output
+            Assert.AreEqual(21, ill.Sum);           // should be an error
         }
 
         [TestMethod]
@@ -38,5 +39,15 @@ namespace LinkedListExample.Tests
             Assert.AreEqual("{5, 7, 9}", ill.ToString());
         }
 
+        [TestMethod]
+        public void TestDuplicates()
+        {
+            var ill = new IntegerLinkedList(5);
+            ill.Append(1);
+            ill.Append(2);
+            ill.Append(3);
+            ill.Append(2);
+            Assert.AreEqual("Duplicates Removed", ill.RemoveDup());
+        }
     }
 }
