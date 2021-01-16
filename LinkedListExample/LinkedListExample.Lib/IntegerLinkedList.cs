@@ -67,10 +67,21 @@ namespace LinkedListExample.Lib
                 return _head.Delete(v);             // start checking from the 1st value => head
         }                                           // 1st value can infer the values after
 
+        // to string
+
         public override string ToString()
         {
-            return base.ToString(); 
+            string ListValueString = "{";
+            IntegerNode NodeNow = _head;
+            while (NodeNow != null)         // when it's not the last one
+            {
+                ListValueString += NodeNow.ToString() + ";";           // conversion & format
+                NodeNow = NodeNow.Next;
+            }
+            ListValueString = ListValueString.Substring(0, ListValueString.Length - 1) + "}";
+            return ListValueString;
         }
+
     }
 
     public class IntegerNode
@@ -104,6 +115,11 @@ namespace LinkedListExample.Lib
                 else
                     return _value + _next.Sum;      // recursion
             }
+        }
+
+        public IntegerNode Next
+        {
+            get { return _next; }
         }
 
         public void Append(int v)   {                               // METHOD
@@ -142,12 +158,9 @@ namespace LinkedListExample.Lib
 
         // Override
 
-        public override string ToString()   {
-            string StringValue = string.Empty;
-
-
+        public override string ToString()
+        {
+            return base.ToString();
         }
-
-
     }
 }
