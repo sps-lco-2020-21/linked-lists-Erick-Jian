@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace LinkedListExample.Lib
 {
+    /// <summary>
+    /// public: visible from anywhere
+    /// </summary>
     public class IntegerLinkedList
     {
         private IntegerNode _head;      // IntegerNode is a variable type 
@@ -66,8 +69,6 @@ namespace LinkedListExample.Lib
                 return _head.Delete(v);             // start checking from the 1st value => head
         }                                           // 1st value can infer the values after
 
-        // to string
-
         public override string ToString()   {
             string ListValueString = "{";
             IntegerNode NodeNow = _head;
@@ -80,34 +81,44 @@ namespace LinkedListExample.Lib
             return ListValueString;
         }
 
-        
-        public string RemoveDup()   {
+        public string RemoveDup()    {
             IntegerNode CurrentOne = _head;
             IntegerNode CompareNode = _head;
             int ComparedValue = CompareNode.GetValue;
-            
-            while (CurrentOne.GetValue != ComparedValue)  {
-                while (CurrentOne.GetValue != ComparedValue)
-                {
-                    CurrentOne = CurrentOne.Next;
-                }
-                CompareNode = CompareNode.Next;
 
-                if (CurrentOne.GetValue == ComparedValue)
-                    CurrentOne.Delete(CurrentOne.GetValue);     // Q: should I use CurrentOne.Delete / _head.Delete?
+            if (_head == null)
+                return "not cool ... u wrong";
+            else
+                return _head.RemoveDup(CurrentOne, CompareNode, ComparedValue);             // start checking from the 1st value => head
+        }
+
+        // Alternative Merge Method 1:
+        public IntegerLinkedList AltMerge_1(IntegerLinkedList ill2)    {
+            if (_head == null) {
+                if (ill2._head == null && this._head == null)
+                    return null;
+                return ill2;
             }
-            return ("Duplicates Removed");
+            else if (ill2._head == null)     // ill2 isn't the default LinkedList, so must specify
+                return this;                // this refers to ill1
+            else {
+                IntegerLinkedList MergedList = new IntegerLinkedList(_head.GetValue);  // start adding into the list: head of 1st one
+                MergedList.Append(ill2._head.GetValue);
+                MergedList = _head.AltMerge_1(MergedList, ill2._head);      //  recursion
+                return MergedList;
+            }
         }
     }
 
+
     public class IntegerNode
     {
-        int _value;
+        int _value;         // internal / private
         IntegerNode _next;
 
         public IntegerNode(int V)   {                               // CONSTRUCTOR
             _value = V;                 // V is the input variable
-            _next = null;                // initialize the next value as a null value
+            _next = null;               // initialize the next value as a null value
         }
 
         /// <summary>
@@ -138,7 +149,7 @@ namespace LinkedListExample.Lib
             }
         }
 
-        public IntegerNode Next
+        internal IntegerNode Next
         {
             get { return _next; }
         }
@@ -147,7 +158,7 @@ namespace LinkedListExample.Lib
             if (_next == null)
                 _next = new IntegerNode(v);
             else
-                _next.Append(v);
+                _next.Append(v);            // _next 变成 List 的 _head
         }
 
         public void Remove(int v)     {
@@ -182,6 +193,43 @@ namespace LinkedListExample.Lib
         public override string ToString()
         {
             return base.ToString();
+        }
+
+        internal string RemoveDup(IntegerNode CurrentOne, IntegerNode CompareNode, int ComparedValue)
+        {
+            while (CurrentOne.GetValue != ComparedValue)
+            {
+                while (CurrentOne.GetValue != ComparedValue)
+                {
+                    CurrentOne = CurrentOne.Next;
+                }
+                CompareNode = CompareNode.Next;
+
+                if (CurrentOne.GetValue == ComparedValue)
+                    CurrentOne.Delete(CurrentOne.GetValue);     // Q: should I use CurrentOne.Delete / _head.Delete?
+            }
+            return ("Duplicates Removed");
+        }
+
+        internal IntegerLinkedList AltMerge_1(IntegerLinkedList mergedList, IntegerNode head2)     // takes in new LinkedList, head of 2 as NODE
+        {
+            // again, three situations: ill1 shorter, ill2 shorter, same length
+            if (_next == null && head2.Next == null)
+                return mergedList;
+            else if (_next == null)  {
+                mergedList.Append(head2.Next._value);            // keep appending value for list 2
+                return this.AltMerge_1(mergedList, head2.Next);  // recursion starts
+                // shouldn't be _next since _next.Next is nothing / undefined
+            }
+            else if (head2.Next == null)  {
+                mergedList.Append(Next._value);                  // adding values from LList 1 iteratively
+                return _next.AltMerge_1(mergedList, head2);      // head2 == 0, so there's recursion
+            }
+            else  {
+                mergedList.Append(Next._value);
+                mergedList.Append(head2.Next._value);  // one after the other
+                return _next.AltMerge_1(mergedList, head2.Next);
+            }
         }
     }
 }

@@ -27,7 +27,7 @@ namespace LinkedListExample.Tests
             ill.Append(9);
             ill.Remove(9);
             ill.Delete(7);                          // Boolean Output
-            Assert.AreEqual(21, ill.Sum);           // should be an error
+            Assert.AreEqual(5, ill.Sum);
         }
 
         [TestMethod]
@@ -49,5 +49,20 @@ namespace LinkedListExample.Tests
             ill.Append(2);
             Assert.AreEqual("Duplicates Removed", ill.RemoveDup());
         }
+
+        [TestMethod]
+        public void TestAltMerge()
+        {
+            var ill = new IntegerLinkedList(1);
+            var ill2 = new IntegerLinkedList(2);
+            ill.Append(3);
+            ill2.Append(4);
+            ill.Append(5);
+            ill2.Append(6);
+            var ill3 = ill.AltMerge(ill2);
+            Assert.AreEqual("{1, 2, 3, 4, 5, 6}",ill3.ToString());
+        }
+
+
     }
 }
